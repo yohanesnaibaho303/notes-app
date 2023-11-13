@@ -1,26 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
+import Input from "./Input";
 
-const NoteInput = () => {
+function NoteInput({ setNotes }) {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+
+  const onSubmitEventHandler = (event) => {
+    event.preventDefault();
+    const timestamp = new Date().toISOString();
+
+    setNotes((datas) => [
+      ...datas,
+      {
+        id: timestamp,
+        title: title,
+        body: body,
+        archived: false,
+        createdAt: timestamp,
+      },
+    ]);
+  };
+
   return (
     <div className="note-input">
       <h2>Create New Note</h2>
-      <form>
-        <p className="note-input__title__char-limit ">Remaining character: </p>
-        <input
+      <form onSubmit={onSubmitEventHandler}>
+        <p className="note-input__title__char-limit">
+          Remaining Character: {50 - title.length}
+        </p>
+        <Input
+          value={title}
+          onChange={setTitle}
+          id="title"
+          name="title"
           type="text"
-          className="note-input__title"
-          placeholder="Write Your Title Here ..."
+          placeholder="Write your title here ..."
+          required
         />
-        <textarea
-          name="note-input__body"
-          placeholder="Write Your Full Note Here ..."
-          cols="30"
-          rows="10"
-        ></textarea>
+        <Input
+          value={body}
+          onChange={setBody}
+          id="body"
+          name="body"
+          type="textarea"
+          placeholder="Write your full note here ..."
+          required
+        />
         <button type="submit">Create</button>
       </form>
     </div>
   );
-};
+}
 
 export default NoteInput;
